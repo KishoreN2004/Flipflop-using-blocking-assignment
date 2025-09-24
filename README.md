@@ -271,7 +271,7 @@ module tff_tb;
 
     #20 tin_t = 1'b0;
 
-    #40 $finish;  // End simulation
+    #40 $finish;  
   end
 
   always #10 clk_t = ~clk_t;
