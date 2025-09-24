@@ -34,24 +34,33 @@ Blocking assignments execute sequentially in the given order, which makes it eas
 ### SR Flip-Flop (Blocking)
 
 ```
-module srff1(q, s, r, clk, rst);
-    input s, r, clk, rst;
-    output reg q;
+module blocking_oscillator(
+    output reg q,
+    input rst
+);
 
-    always @(posedge clk) begin
-        if (rst)
-            q <= 1'b0;
-        else begin
+    reg s, r;
+
+    always @(*) begin
+        if (rst) begin
+            q = 0;
+            s = 0;
+            r = 0;
+        end else begin
+            s = ~q;
+            r = q;
+
             case ({s, r})
-                2'b00: q <= q;
-                2'b01: q <= 1'b0;
-                2'b10: q <= 1'b1;
-                2'b11: q <= 1'bx; // invalid state
-                default: q <= 1'bx; // safety default
+                2'b00: q = q;
+                2'b01: q = 0;
+                2'b10: q = 1;
+                2'b11: q = 1'bx;
+                default: q = 1'bx;
             endcase
         end
     end
 endmodule
+
 ```
 
 ### SR Flip-Flop Test bench 
@@ -81,7 +90,7 @@ module srff1_tb;
     s_t = 0;
     r_t = 0;
 
-    #20 rst_t = 0;  // Deactivate reset
+    #20 rst_t = 0;  
 
     #20 s_t = 1; r_t = 1;  
     #20 s_t = 0; r_t = 1;  
