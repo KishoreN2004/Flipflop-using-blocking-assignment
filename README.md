@@ -34,7 +34,7 @@ Blocking assignments execute sequentially in the given order, which makes it eas
 ### SR Flip-Flop (Blocking)
 
 ```
-module blocking_oscillator(
+module srff1(
     output reg q,
     input rst
 );
